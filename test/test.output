@@ -1,0 +1,28 @@
+After setting everything as WHITE
+*cell1State , WHITE , *cell2State , WHITE , *cell3State , WHITE , *cell4State , WHITE , 
+CppStateManager State Usage on line 17:
+	WHITE -> 4
+	Total -> 4
+
+After making cell2 as GRAY and cell3 as BLACK
+*cell1State , WHITE , *cell2State , GRAY , *cell3State , BLACK , *cell4State , WHITE , 
+CppStateManager State Usage on line 23:
+	BLACK -> 1
+	GRAY -> 1
+	WHITE -> 2
+	Total -> 4
+
+After migrating all WHITE cells to BLACK
+*cell1State , BLACK , *cell2State , GRAY , *cell3State , BLACK , *cell4State , BLACK , 
+CppStateManager State Usage on line 28:
+	BLACK -> 3
+	GRAY -> 1
+	Total -> 4
+
+After swapping GRAY and BLACK Cells
+*cell1State , GRAY , *cell2State , BLACK , *cell3State , GRAY , *cell4State , GRAY , 
+CppStateManager State Usage on line 33:
+	BLACK -> 1
+	GRAY -> 3
+	Total -> 4
+

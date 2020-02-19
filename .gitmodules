@@ -1,0 +1,6 @@
+[submodule "CppEnumCreator"]
+	path = CppEnumCreator
+	url = https://github.com/gandhidarshak/CppEnumCreator
+[submodule "CppReflection"]
+	path = CppReflection
+	url = https://github.com/gandhidarshak/CppReflection

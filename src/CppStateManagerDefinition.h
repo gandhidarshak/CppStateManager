@@ -7,7 +7,7 @@
 // Create Enum related APIs.
 #define CppEnumName States
 #define CppEnumParentClass CppStateManager
-#include "xpp/CppEnumCreatorDefinition.h"
+#include "./../CppEnumCreator/src/CppEnumCreatorDefinition.h"
       
 CppStateManager& CppStateManager::getGlobal()
 {
@@ -157,6 +157,42 @@ void CppStateManager::printStateUsage(unsigned int lineNo)
       }
    }
    std::cout << "\t" << "Total" << " -> " << totalCounter << std::endl << std::endl;
+}
+unsigned int CppStateManager::getStateUsage(std::string sStr)
+{
+   States s;
+   CppStateManager::string_to_enum(sStr, s);
+   return getStateUsage(s);
+}
+
+unsigned int CppStateManager::getStateUsage(States s)
+{
+      unsigned int counter = 0;
+      auto itr = m_states.find(s);
+      if(itr == m_states.end())
+         return 0;
+
+      StatePtrList sList = itr->second;
+      auto itrBefore = sList.before_begin();
+      auto itrNext = sList.begin();
+      while(itrNext != sList.end())
+      {
+         unsigned int useCount = itrNext->use_count();
+         --useCount; 
+         --useCount; 
+         if(useCount <= 0)
+         {
+            itrNext = sList.erase_after(itrBefore);
+            continue;
+         }
+         counter += useCount;
+         if((*(*itrNext)) != s) // make sure that map with index s has all values as s
+            std::cerr << (*(*itrNext)) << " state found instead of state " << s << std::endl;
+         ++itrBefore;
+         ++itrNext;
+      }
+
+      return counter;
 }
 
 #undef CppStateManager 

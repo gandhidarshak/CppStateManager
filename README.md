@@ -1,53 +1,60 @@
 # CppStateManager
-Set of macros to elegently and automatically define CppStateManager class that can act as a central manager to hold states (e.g. WHITE/BLACK/GRAY, UP_TO_DATE/STALE, etc.) for all the nodes of any graph representation or all the cells of any spreadsheet representation.
+Set of macros to elegently and automatically define CppStateManager class that can act as a central manager to hold states (e.g. WHITE/BLACK/GRAY, UP_TO_DATE/STALE, VISITED/NOT_VISITED etc.) for any group of objects (nodes in a graph, cells in a spreadsheet, gates in a circuit, etc.)
 
-<!---
 ### Motivation
-Ever since I learned C++ for the first time in ~2007, I have found my self using user defined enum data-types to define different type of explicitely named constants. More often than not, for these enums, I have found one or the other need to have a enum_to_string and/or string_to_enum conversion which often require us to write the same words multiple times (as string, as enums, etc.) which is error prone and difficult to maintain over time. Albeit, there are some preprocessor macro driven approaches ([e.g.](https://stackoverflow.com/questions/5530248/creating-a-string-list-and-an-enum-list-from-a-c-macro)) which helps in defining the list only once and providing both conversion, but they are far from being easy to use and elegant.
+Most algorithms that work with a large group of objects, often has a preamble stage of iterating over these objects and changing something in their state. For example, iterating over all nodes in a graph and changing their color to WHITE (not visited) before a traversal. Or Invalidating (marking STALE) cells in a spreadsheet type application before a full-calculation. Or resetting arrival-time/slack at every gate before static timing analysis of a circuit. Sometimes, we also requires stats like what is the count of gates that are not meeting their slack.
 
-With C++11, enum classes (tightly scoped enums) were introduced which I immidiately got attracted to due to their [advantages](https://www.geeksforgeeks.org/enum-classes-in-c-and-their-advantage-over-enum-datatype) over the plain old enum data types. However, with the virtue of having type-safety (no default conversion between enum and underlying int representations), enum classes often poses innate need of APIs like enum_to_number and number_to_enum and increment/decrement operators like ++/-- .
+One solution to do this, is to store the state inside every object as some sort of boolean or enum. And then iterating over all objects to reset them or count the stats. But this often makes an O(N) iteration where N is the number of objects.
 
 ### Description
-This project developes an easy/intuitive method to define/declare enum class types inside any class or namespace. All that the users have to do is provide name of enum, its possible values (list) and name of the class (if applicable) as predefined macros in .h (declaration) and .cxx (definition) files of their code. With proper inclusion of files developed in this project, macros defined inside the file creates the enum class and automatically defines/declares static APIs that performs everything mentioned above.
+This project provides an alternative way of implementing the state property of every object by creating a [singleton](https://en.wikipedia.org/wiki/Singleton_pattern) state-manager class and storing [fly-weight](https://en.wikipedia.org/wiki/Flyweight_pattern) objects in the manager and sharing their shared_ptrs with individual objects. This enables an ~O(1) state migration or state swapping for all the objects by doing that in one-shot. It also provides APIs to printUsage or getUsage for all or one of the states using shared_ptr's use_counts.
+Note: the same approach can be easily extended to not only return counts of objects in a particular state but also list of all objects that are in that state. Give it a try if your application requires that.
 
 ### Dependencies
+The code uses [CppEnumCreator](https://github.com/gandhidarshak/CppEnumCreator) project to create the state enums.
 The code is tested on Linux/Windows-Cygwin gcc-6.2.0. However, It should work on any recent C++ compilers that supports C++ 11 or above. I have purposefully avoided dependencies on special purpose  libraries like Boost to make it self sufficient and easy to use. 
 
 ### Installation 
-Installation is quite simple, just download the .h files from [src dir](https://github.com/gandhidarshak/CppStateManager/tree/master/src/) from git hub and keep it in a location which is accessible from your project.  
+Installation is quite simple, git clone https://github.com/gandhidarshak/CppStateManager <PathOfDir> --recursive will download this and all other dependent submodules.
 
 ### Usage
-The enum creation works in 2 steps - declaration/definition, like most other code that you will write between header and c++ file.
+The state manager class creation works in 2 steps - declaration/definition, like most other code that you will write between header and c++ file.
 1.  header file - declaration:
-Inside your header file, inside the class/namespace declaration {...}, where you will normally define enums, #define below macros. And #include  "CppStateManagerDeclaration.h" after that. The files uses standard C++ includes, but if needed, you can also #include "CppStateManagerIncludes.h" at top of your header file.
-    1.  CppEnumParentClass <Name of the class/namespace - e.g. classA, namespaceB, namespaceC::ClassA>
-    2.  CppEnumName <Name of the enum class - e.g. Digits, Colors, Months>
-    3.  CppEnumList <Comma separated list of enum-items. Use \ for multine line spliting.>
-    4.  CppDllExportMacro <Name of the dll export/import macro if working across dlls in windows.> (optional)
+Inside your header file, #define below macros. And #include "CppStateManagerDeclaration.h" after that. 
+ 
+    1.  CppStateList <List of possible states>
+    2.  CppStateManager <Name of manager class> (optional. defaulted to CppStateManager if not given)
+    3.  CppStateManagerDllExportMacro <Name of the dll export/import macro if working across dlls in windows.> (optional)
 2.  C++ file - definition:
-Inside your c++ file, where you will normally define class APIs or enum APIs, copy below two macros from the header file above. And #include  "CppStateManagerDefinition.h" after that.
-    1.  CppEnumParentClass <Name of the class/namespace - e.g. classA, namespaceB, namespaceC::ClassA>
-    2.  CppEnumName <Name of the enum class - e.g. Digits, Colors, Months>
+Inside your c++ file, define CppStateManager class' name if you have over-ridden the default above and #include  "CppStateManagerDefinition.h" after that.
 
-After the above two steps, upone compilation, you will automatically have below static APIs declared (in .h) and defined (in .c++) in your class or namespace.
-1.  string_to_enum
-2.  enum_to_string
-3.  ushort_to_enum* 
-4.  enum_to_ushort*
-5.  prefix decrement (--x) operator
-6.  postfix decrement (x--) operator
-7.  prefix increment (\++x) operator
-8.  postfix increment (x++) operator
-9.  ostream << operator 
-10. num_enum_items
-
-*unsigned short is used as underlying number representation of enum
-
-
+After the above two steps, upon compilation, you will automatically have below typedefs/APIs declared (in .h) and defined (in .c++) in your class or namespace.
+1. getGlobal() to get the singleton by reference
+2. typedef std::shared_ptr<const States> ConstStatePtr;
+3. getStatePtr(States s) - get shared_ptr to assign to local ptr variable of the object
+3. getStatePtr(std::string sStr) - as above with string inputs.
+5. purgeStateUsage() - purge the fly-weight objects which are no longer referenced by anything
+6. printStateUsage(unsigned int lineNo=0) - print usage stats for all stats.
+7. migrateState(States from, States to) - migrate all objects of state "from" to state "to"
+8. migrateState(std::string fromStr, std::string toStr) - as above with string inputs
+9. swapStates(States one, States two) - swap objects of state one and two with each other
+10.swapStates(std::string oneStr, std::string twoStr) - as above with string inputs
+11.unsigned int getStateUsage(States s) - get number of objects with give state
+12.unsigned int getStateUsage(std::string sStr) - as above with string inputs
+Besides these, it also creates APIs related to the state list ennum class as mentioned in [CppEnumCreator](https://github.com/gandhidarshak/CppEnumCreator)
+13.  string_to_enum
+14.  enum_to_string
+15.  ushort_to_enum* 
+16.  enum_to_ushort*
+17.  prefix decrement (--x) operator
+18.  postfix decrement (x--) operator
+19.  prefix increment (\++x) operator
+20.  postfix increment (x++) operator
+21.  ostream << operator 
+22.  num_enum_items
 
 Please see [test.h](https://github.com/gandhidarshak/CppStateManager/blob/master/test/test.h) and [test.cxx](https://github.com/gandhidarshak/CppStateManager/blob/master/test/test.cxx) files for a more detailed example of the usage. 
 
--->
 ### Sharing is caring!
 
 Please feel free to IM me with your suggestions and feedback about the idea!

@@ -2,7 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include <forward_list>
-#include "xpp/CppEnumCreatorIncludes.h"
+#include "./../CppEnumCreator/src/CppEnumCreatorIncludes.h"
 
 #ifndef CppStateManager
 #define CppStateManager CppStateManager
@@ -40,7 +40,7 @@ class CppStateManager
 #define CppEnumParentClass CppStateManager
 #define CppEnumList CppStateList
 #define CppEnumCreatorDllExportMacro CppStateManagerDllExportMacro
-#include "xpp/CppEnumCreatorDeclaration.h"
+#include "./../CppEnumCreator/src/CppEnumCreatorDeclaration.h"
 
       typedef std::shared_ptr<const States> ConstStatePtr;
       CppStateManagerDllExportMacro ConstStatePtr getStatePtr(States s);
@@ -51,6 +51,8 @@ class CppStateManager
       CppStateManagerDllExportMacro void migrateState(std::string fromStr, std::string toStr);
       CppStateManagerDllExportMacro void swapStates(States one, States two);
       CppStateManagerDllExportMacro void swapStates(std::string oneStr, std::string twoStr);
+      CppStateManagerDllExportMacro unsigned int getStateUsage(States s);
+      CppStateManagerDllExportMacro unsigned int getStateUsage(std::string sStr);
    private:
       typedef std::shared_ptr<States> StatePtr;
       typedef std::forward_list<StatePtr> StatePtrList;

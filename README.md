@@ -28,7 +28,7 @@ Inside your header file, #define below macros. And #include "CppStateManagerDecl
 2.  C++ file - definition:
 Inside your c++ file, define CppStateManager class' name if you have over-ridden the default above and #include  "CppStateManagerDefinition.h" after that.
 
-After the above two steps, upon compilation, you will automatically have below typedefs/APIs declared (in .h) and defined (in .c++) in your class or namespace.
+After the above two steps, upon compilation, you will automatically have a class with below typedefs/APIs declared (in .h) and defined (in .c++). Some of these APIs (#13 onwards) are derived for the ennum class as mentioned in [CppEnumCreator](https://github.com/gandhidarshak/CppEnumCreator)
 1. getGlobal() to get the singleton by reference
 2. typedef std::shared_ptr<const States> ConstStatePtr;
 3. getStatePtr(States s) - get shared_ptr to assign to local ptr variable of the object
@@ -38,20 +38,19 @@ After the above two steps, upon compilation, you will automatically have below t
 7. migrateState(States from, States to) - migrate all objects of state "from" to state "to"
 8. migrateState(std::string fromStr, std::string toStr) - as above with string inputs
 9. swapStates(States one, States two) - swap objects of state one and two with each other
-10.swapStates(std::string oneStr, std::string twoStr) - as above with string inputs
-11.unsigned int getStateUsage(States s) - get number of objects with give state
-12.unsigned int getStateUsage(std::string sStr) - as above with string inputs
-Besides these, it also creates APIs related to the state list ennum class as mentioned in [CppEnumCreator](https://github.com/gandhidarshak/CppEnumCreator)
-13.  string_to_enum
-14.  enum_to_string
-15.  ushort_to_enum* 
-16.  enum_to_ushort*
-17.  prefix decrement (--x) operator
-18.  postfix decrement (x--) operator
-19.  prefix increment (\++x) operator
-20.  postfix increment (x++) operator
-21.  ostream << operator 
-22.  num_enum_items
+10. swapStates(std::string oneStr, std::string twoStr) - as above with string inputs
+11. unsigned int getStateUsage(States s) - get number of objects with give state
+12. unsigned int getStateUsage(std::string sStr) - as above with string inputs
+13. string_to_enum
+14. enum_to_string
+15. ushort_to_enum* 
+16. enum_to_ushort*
+17. prefix decrement (--x) operator
+18. postfix decrement (x--) operator
+19. prefix increment (\++x) operator
+20. postfix increment (x++) operator
+21. ostream << operator 
+22. num_enum_items
 
 Please see [test.h](https://github.com/gandhidarshak/CppStateManager/blob/master/test/test.h) and [test.cxx](https://github.com/gandhidarshak/CppStateManager/blob/master/test/test.cxx) files for a more detailed example of the usage. 
 

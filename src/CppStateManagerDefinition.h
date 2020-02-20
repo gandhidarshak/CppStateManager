@@ -1,5 +1,4 @@
 
-
 #ifndef CppStateManager 
 #define CppStateManager CppStateManager
 #endif
@@ -8,7 +7,7 @@
 // Create Enum related APIs.
 #define CppEnumName States
 #define CppEnumParentClass CppStateManager
-#include "./../CppEnumCreator/src/CppEnumCreatorDefinition.h"
+#include "xpp/CppEnumCreatorDefinition.h"
       
 CppStateManager& CppStateManager::getGlobal()
 {
@@ -123,7 +122,7 @@ void CppStateManager::purgeStateUsage()
 
 void CppStateManager::printStateUsage(unsigned int lineNo) 
 {
-   std::cout << "CppStateManager State Usage";
+   std::cout << CppStringify(CppStateManager) << " state usage";
    if(lineNo>0)
       std::cout << " on line "<< lineNo ;
    std::cout << ":" << std::endl;

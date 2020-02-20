@@ -2,7 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include <forward_list>
-#include "./../CppEnumCreator/src/CppEnumCreatorIncludes.h"
+#include "xpp/CppEnumCreatorIncludes.h"
 
 #ifndef CppStateManager
 #define CppStateManager CppStateManager
@@ -10,6 +10,15 @@
 
 #ifndef CppStateList
 #error "Please define CppStateList macro before including CppStateManagerDeclaration.h file."
+#endif
+
+#ifndef CppStringify
+#define CppStringify_(...) #__VA_ARGS__
+#define CppStringify(x) CppStringify_(x)
+#endif
+
+#ifndef CppStateManagerDllExportMacro 
+#define CppStateManagerDllExportMacro /*No Dll Export?*/
 #endif
 
 class CppStateManager
@@ -24,29 +33,30 @@ class CppStateManager
       CppStateManager& operator=( const CppStateManager& obj ) = delete;
 
    public:
-      static CppStateManager& getGlobal();
+      CppStateManagerDllExportMacro static CppStateManager& getGlobal();
 
       // Define Enums with all its bells and whistles.
-#define CppDllExportMacro /*Give name of the Dll Export macro if needed*/
 #define CppEnumName States
 #define CppEnumParentClass CppStateManager
 #define CppEnumList CppStateList
-#include "./../CppEnumCreator/src/CppEnumCreatorDeclaration.h"
+#define CppEnumCreatorDllExportMacro CppStateManagerDllExportMacro
+#include "xpp/CppEnumCreatorDeclaration.h"
 
       typedef std::shared_ptr<const States> ConstStatePtr;
-      ConstStatePtr getStatePtr(States s);
-      ConstStatePtr getStatePtr(std::string sStr);
-      void purgeStateUsage();
-      void printStateUsage(unsigned int lineNo=0);
-      void migrateState(States from, States to);
-      void migrateState(std::string fromStr, std::string toStr);
-      void swapStates(States one, States two);
-      void swapStates(std::string oneStr, std::string twoStr);
+      CppStateManagerDllExportMacro ConstStatePtr getStatePtr(States s);
+      CppStateManagerDllExportMacro ConstStatePtr getStatePtr(std::string sStr);
+      CppStateManagerDllExportMacro void purgeStateUsage();
+      CppStateManagerDllExportMacro void printStateUsage(unsigned int lineNo=0);
+      CppStateManagerDllExportMacro void migrateState(States from, States to);
+      CppStateManagerDllExportMacro void migrateState(std::string fromStr, std::string toStr);
+      CppStateManagerDllExportMacro void swapStates(States one, States two);
+      CppStateManagerDllExportMacro void swapStates(std::string oneStr, std::string twoStr);
    private:
       typedef std::shared_ptr<States> StatePtr;
       typedef std::forward_list<StatePtr> StatePtrList;
       std::unordered_map<States, StatePtrList> m_states;
 };
 
+#undef CppStateManagerDllExportMacro
 #undef CppStateManager
 #undef CppStateList

@@ -13,7 +13,9 @@ At a high-level, this implementation uses more memory to provide amortized const
 
 ### Dependencies
 The code is tested on Linux/Windows-Cygwin gcc-6.2.0. However, It should work on any recent C++ compilers that supports C++ 11 or above. I have purposefully avoided dependencies on special purpose  libraries like Boost to make it self sufficient and easy to use. 
+
 Note: The test code uses [CppEnumCreator](https://github.com/gandhidarshak/CppEnumCreator) project to create the state enums. But if you want to avoid using that enum creator, you can use any other enum as well.
+
 Note: This class is not strictly thread-safe due to the nature of the problem that I was trying to solve while creating this. If you want thread-safety, please put mutex locks on usage of m_states variable in class' APIs.
 
 ### Installation 

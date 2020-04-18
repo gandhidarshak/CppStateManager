@@ -1,28 +1,123 @@
-After setting everything as WHITE
-*cell1State , WHITE , *cell2State , WHITE , *cell3State , WHITE , *cell4State , WHITE , 
-CppStateManager State Usage on line 17:
-	WHITE -> 4
-	Total -> 4
 
-After making cell2 as GRAY and cell3 as BLACK
-*cell1State , WHITE , *cell2State , GRAY , *cell3State , BLACK , *cell4State , WHITE , 
-CppStateManager State Usage on line 23:
-	BLACK -> 1
-	GRAY -> 1
-	WHITE -> 2
-	Total -> 4
 
-After migrating all WHITE cells to BLACK
-*cell1State , BLACK , *cell2State , GRAY , *cell3State , BLACK , *cell4State , BLACK , 
-CppStateManager State Usage on line 28:
-	BLACK -> 3
-	GRAY -> 1
-	Total -> 4
+1. Initial distribution.
+State usage at line 22:
+	BLACK -> 25 (in 1 fragments)
+	GRAY -> 25 (in 1 fragments)
+	RED -> 25 (in 1 fragments)
+	WHITE -> 25 (in 1 fragments)
+	Total -> 100
 
-After swapping GRAY and BLACK Cells
-*cell1State , GRAY , *cell2State , BLACK , *cell3State , GRAY , *cell4State , GRAY , 
-CppStateManager State Usage on line 33:
-	BLACK -> 1
-	GRAY -> 3
-	Total -> 4
+clrMgr.getStateUsage(Node::Color::BLACK) = 25
+randomNodes.back()->getColor() = BLACK
+
+
+2. After  migrating  all  WHITE  nodes  to  BLACK
+State usage at line 28:
+	BLACK -> 50 (in 2 fragments)
+	GRAY -> 25 (in 1 fragments)
+	RED -> 25 (in 1 fragments)
+	Total -> 100
+
+clrMgr.getStateUsage(Node::Color::BLACK) = 50
+randomNodes.back()->getColor() = BLACK
+
+
+ 3. After  swapping  GRAY  and   BLACK   nodes
+State usage at line 34:
+	BLACK -> 25 (in 1 fragments)
+	GRAY -> 50 (in 2 fragments)
+	RED -> 25 (in 1 fragments)
+	Total -> 100
+
+clrMgr.getStateUsage(Node::Color::BLACK) = 25
+randomNodes.back()->getColor() = GRAY
+
+
+ 4. After deleting first 20 nodes
+State usage at line 48:
+	BLACK -> 20 (in 1 fragments)
+	GRAY -> 40 (in 2 fragments)
+	RED -> 20 (in 1 fragments)
+	Total -> 80
+
+clrMgr.getStateUsage(Node::Color::BLACK) = 20
+randomNodes.back()->getColor() = GRAY
+
+
+ 5. After migrating all nodes to WHITE
+State usage at line 54:
+	WHITE -> 80 (in 4 fragments)
+	Total -> 80
+
+clrMgr.getStateUsage(Node::Color::BLACK) = 0
+randomNodes.back()->getColor() = WHITE
+
+
+ 6. After setting last node as RED
+State usage at line 60:
+	RED -> 1 (in 1 fragments)
+	WHITE -> 79 (in 4 fragments)
+	Total -> 80
+
+clrMgr.getStateUsage(Node::Color::BLACK) = 0
+randomNodes.back()->getColor() = RED
+
+
+ 7. Let's create lot of fragments in WHITE to trigger auto defragmentation
+Randomization Attempt - 7.01
+State usage at line 85:
+	WHITE -> 80 (in 7 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.02
+State usage at line 85:
+	WHITE -> 80 (in 10 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.03
+State usage at line 85:
+	WHITE -> 80 (in 13 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.04
+State usage at line 85:
+	WHITE -> 80 (in 16 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.05
+State usage at line 85:
+	WHITE -> 80 (in 18 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.06
+State usage at line 85:
+	WHITE -> 80 (in 20 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.07
+State usage at line 85:
+	WHITE -> 80 (in 22 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.08
+State usage at line 85:
+	WHITE -> 80 (in 23 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.09
+State usage at line 85:
+	WHITE -> 80 (in 25 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.1
+State usage at line 85:
+	WHITE -> 80 (in 26 fragments)
+	Total -> 80
+
+Randomization Attempt - 7.11
+Note: Defragmentation happened to maintain amortized const time.
+State usage at line 85:
+	WHITE -> 80 (in 1 fragments)
+	Total -> 80
 

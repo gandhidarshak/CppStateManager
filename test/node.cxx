@@ -14,8 +14,12 @@ Node::Node(int v, Node::Color c)
 
 Node::Color Node::getColor()
 {
-   auto& ncm = NodeColorMgr::getGlobal();
-   return ncm.getState(this);
+   if(mp_state)
+   {
+      auto& ncm = NodeColorMgr::getGlobal();
+      return ncm.getState(this);
+   }
+   return Node::Color::NumItems;
 }
 
 void Node::setColor(const Node::Color c)
@@ -26,8 +30,11 @@ void Node::setColor(const Node::Color c)
 
 void Node::clearColor()
 {
-   auto& ncm = NodeColorMgr::getGlobal();
-   ncm.clearState(this);
+   if(mp_state)
+   {
+      auto& ncm = NodeColorMgr::getGlobal();
+      ncm.clearState(this);
+   }
 }
 
 

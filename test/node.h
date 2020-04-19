@@ -23,8 +23,9 @@ class Node
 
    private:
       int val;
-      // Node class should have below two lines.
+      // Node class should have below lines.
       friend class CppStateManager<Node, Node::Color>;
+      friend class CppStateNodesBundle<Node, Node::Color>;
       const CppStateNodesBundle<Node, Node::Color>* mp_state;
 };
 

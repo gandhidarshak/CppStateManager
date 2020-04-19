@@ -25,9 +25,22 @@ class CppStateNodesBundle
       STATE_ENUM state;
       std::unordered_set<NODE_CLASS*> nodes;
       CppStateNodesBundle(const STATE_ENUM s) { state = s; };
+      ~CppStateNodesBundle();
       bool operator==(const STATE_ENUM to) const {return state == to;};
       bool operator!=(const STATE_ENUM to) const {return !(state == to);};
 };
+
+template<typename NODE_CLASS, typename STATE_ENUM>
+CppStateNodesBundle<NODE_CLASS,STATE_ENUM>::~CppStateNodesBundle()
+{
+   //std::cout << "Destructor of CppStateNodesBundle called for state " << state << std::endl;
+   for(auto n : nodes)
+   {
+      // State Manager doesn't own the cells so should not delete them
+      if(n)
+         n->mp_state = nullptr;
+   }
+}
 
 template<typename NODE_CLASS, typename STATE_ENUM> 
 class CppStateManager
@@ -38,7 +51,7 @@ class CppStateManager
       // Using singleton design pattern for CppStateManagerClass as protected.
       //------------------------------------------------------------------------
       CppStateManager( );
-      ~CppStateManager( );
+      virtual ~CppStateManager( );
       CppStateManager (const CppStateManager& obj ) = delete;
       CppStateManager& operator=( const CppStateManager& obj ) = delete;
    public:
@@ -79,6 +92,7 @@ CppStateManager<NODE_CLASS, STATE_ENUM>::CppStateManager()
    template<typename NODE_CLASS, typename STATE_ENUM>
 CppStateManager<NODE_CLASS, STATE_ENUM>::~CppStateManager()
 {
+   // std::cout << "Destructor of CppStateManager called" << std::endl;
    for(auto s : m_states)
    {
       for(auto p : s.second)
@@ -112,7 +126,10 @@ CppStateManager<NODE_CLASS, STATE_ENUM>::clearState(NODE_CLASS* n)
       return constRunTime;
    auto erased = p_nsb->nodes.erase(n);
    if(erased == 0)
+   {
       std::cerr << "Trying to clear state of a node which does not contain that state!" << std::endl;
+      std::cerr << n->mp_state->state << " - " << p_nsb->state << std::endl;
+   }
 
    // Avoid burning purging run-time as it's not mandatory 
    // if(p_nsb->nodes.size()==0)

@@ -10,14 +10,10 @@
 
 //------------------------------------------------------------------------------
 // Assumption: It is assumed that Node class has a mp_state pointer that can  be
-// directly accessed by StateManager class as a friend class or public member. 
-// This class is not thread-safe but if you need a TS implementation, please
+// directly accessed by StateManager class as a friend class or  public  member.
+// This class is not thread-safe but if you need  a  TS  implementation,  please
 // identify and put mutexes on m_states' usage.
 //------------------------------------------------------------------------------
-
-#ifndef CppStateManagerDllExportMacro 
-#define CppStateManagerDllExportMacro /*No Dll Export?*/
-#endif
 
 template<typename NODE_CLASS, typename STATE_ENUM> 
 class CppStateNodesBundle
@@ -58,18 +54,18 @@ class CppStateManager
    public:
       // For bool APIs, if the run-time was const 
       // (defragmentation didn't happen) then it will return true
-      CppStateManagerDllExportMacro static CppStateManager& getGlobal();
-      CppStateManagerDllExportMacro STATE_ENUM getState(NODE_CLASS* n) const ;
-      CppStateManagerDllExportMacro bool setState(NODE_CLASS* n, STATE_ENUM s);
-      CppStateManagerDllExportMacro bool clearState(NODE_CLASS* n);
-      CppStateManagerDllExportMacro bool purgeStateUsage(STATE_ENUM s);
-      CppStateManagerDllExportMacro void printStateUsage(unsigned int lineNo=0);
-      CppStateManagerDllExportMacro bool migrateGivenStateTo(STATE_ENUM from, STATE_ENUM to);
-      CppStateManagerDllExportMacro bool migrateAllStatesTo(STATE_ENUM to);
-      CppStateManagerDllExportMacro bool swapStates(STATE_ENUM one, STATE_ENUM two);
-      CppStateManagerDllExportMacro unsigned int getStateUsage(STATE_ENUM s) const;
-      CppStateManagerDllExportMacro void getStateNodes(STATE_ENUM s, std::vector<NODE_CLASS*>& nodes) const;
-      CppStateManagerDllExportMacro void defragmentStateUsage(STATE_ENUM s);
+      static CppStateManager& getGlobal();
+      STATE_ENUM getState(NODE_CLASS* n) const ;
+      bool setState(NODE_CLASS* n, STATE_ENUM s);
+      bool clearState(NODE_CLASS* n);
+      bool purgeStateUsage(STATE_ENUM s);
+      void printStateUsage(unsigned int lineNo=0);
+      bool migrateGivenStateTo(STATE_ENUM from, STATE_ENUM to);
+      bool migrateAllStatesTo(STATE_ENUM to);
+      bool swapStates(STATE_ENUM one, STATE_ENUM two);
+      unsigned int getStateUsage(STATE_ENUM s) const;
+      void getStateNodes(STATE_ENUM s, std::vector<NODE_CLASS*>& nodes) const;
+      void defragmentStateUsage(STATE_ENUM s);
    private:
       typedef CppStateNodesBundle<NODE_CLASS, STATE_ENUM>* StatePtr;
       typedef std::forward_list<StatePtr> StatePtrList;

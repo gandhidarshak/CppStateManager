@@ -1,6 +1,14 @@
 
+// #if COMPILING_Node
+//     #define DLL_EXIMPORT __declspec(dllexport)
+// #else
+//     #define DLL_EXIMPORT __declspec(dllimport)
+// #endif
+
 #include "./../src/CppStateManager.h"
 #include "./../CppEnumCreator/src/CppEnumCreatorIncludes.h"
+
+// template class DLL_EXIMPORT CppStateManager<Node, Node::Color>;
 
 class Node
 {
@@ -28,6 +36,7 @@ class Node
       friend class CppStateNodesBundle<Node, Node::Color>;
       const CppStateNodesBundle<Node, Node::Color>* mp_state;
 };
+
 
 class NodeColorMgr : public CppStateManager<Node, Node::Color> {
    // Define getGlobal if you want to extend the base class.

@@ -1,3 +1,4 @@
+// 67d7842dbbe25473c3c32b93c0da8047785f30d78e8a024de1b57352245f9689
 #ifndef CppStateManager_h_
 #define CppStateManager_h_
 
@@ -55,7 +56,7 @@ class CppStateManager
       // For bool APIs, if the run-time was const 
       // (defragmentation didn't happen) then it will return true
       static CppStateManager& getGlobal();
-      STATE_ENUM getState(NODE_CLASS* n) const ;
+      STATE_ENUM getState(const NODE_CLASS* n) const ;
       bool setState(NODE_CLASS* n, STATE_ENUM s);
       bool clearState(NODE_CLASS* n);
       bool purgeStateUsage(STATE_ENUM s);
@@ -103,7 +104,7 @@ CppStateManager<NODE_CLASS, STATE_ENUM>::~CppStateManager()
 
 template<typename NODE_CLASS, typename STATE_ENUM>
 STATE_ENUM 
-CppStateManager<NODE_CLASS, STATE_ENUM>::getState(NODE_CLASS* n) const
+CppStateManager<NODE_CLASS, STATE_ENUM>::getState(const NODE_CLASS* n) const
 {
    if(n && n->mp_state)
       return n->mp_state->state;

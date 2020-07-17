@@ -372,7 +372,6 @@ template<typename NODE_CLASS, typename STATE_ENUM>
 void 
 CppStateManager<NODE_CLASS, STATE_ENUM>::getStateNodes(STATE_ENUM s, std::vector<NODE_CLASS*>& nodes) const
 {
-   nodes.clear();
    auto itr = m_states.find(s);
    if(itr == m_states.end())
       return ;
